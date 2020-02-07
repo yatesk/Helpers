@@ -1,7 +1,8 @@
-﻿using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Content;
 
-namespace Helpers
+namespace Sudoku_CS
 {
     class Button
     {
@@ -14,16 +15,16 @@ namespace Helpers
 
         private bool mouseOver;
 
-        public Button(Texture2D _texture, SpriteFont _font, Vector2 _position, string _text, Color _textColor)
+        public Button(string textureName, string fontName, Vector2 _position, string _text, Color _textColor, ContentManager content)
         {
-            texture = _texture;
-            font = _font;
+            texture = content.Load<Texture2D>(textureName);
+            font = content.Load<SpriteFont>(fontName);
             position = _position;
             text = _text;
             textColor = _textColor;
         }
 
-        public bool ButtonClick(int _x, int _y)
+        public bool Clicked(int _x, int _y)
         {
             if (_x >= position.X && _x <= position.X + texture.Width && _y >= position.Y && _y <= position.Y + texture.Height)
                 return true;
@@ -48,11 +49,13 @@ namespace Helpers
             else
                 spriteBatch.Draw(texture, position);
 
-            // center text
-            int x = 5;
-            int y = 5;
+            if (text.Length > 0)
+            {
+                float x = position.X + (texture.Width / 2) - (font.MeasureString(text).X / 2);
+                float y = position.Y + (texture.Height / 2) - (font.MeasureString(text).Y / 2);
 
-            spriteBatch.DrawString(font, text, new Vector2(x, y), textColor);
+                spriteBatch.DrawString(font, text, new Vector2(x, y), textColor);
+            }
         }
     }
 }
